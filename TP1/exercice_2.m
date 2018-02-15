@@ -72,8 +72,8 @@ cC1 = sigma2(1,1)/somme;
 cC2 = sigma2(2,2)/somme;
 cC3 = sigma2(3,3)/somme;
 
-figure(2);				% Premiere fenetre d'affichage
-subplot(2,2,1);				% La fenetre comporte 2 lignes et 2 colonnes
+figure(2);				% Deuxieme fenetre d'affichage
+subplot(2,2,1);
 imagesc(I2);
 axis off;
 axis equal;

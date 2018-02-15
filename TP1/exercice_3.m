@@ -6,7 +6,7 @@ H = taille_ecran(4);
 figure('Name','Separation des canaux RVB','Position',[0,0,0.67*L,0.67*H]);
 
 %% Lecture et affichage d'une image RVB :
-I = imread('baby.jpg');
+I = imread('autumn.tif');
 figure(1);				% Premiere fenetre d'affichage
 subplot(2,2,1);				% La fenetre comporte 2 lignes et 2 colonnes
 imagesc(I);
@@ -64,13 +64,31 @@ Y = rgb2gray(I);
 colormap gray;
 subplot(2,2,4);
 hold on
-imagesc(flip(Invg,1));
+imagesc(flip(Y,1));
 axis off;
 axis equal
-title('0.2989R + 0.5870V + 0.1140B');
-
+title('Y', 'FontSize', 20);
+Cb = -0.1687*R - 0.3313*V + 0.5*B + 128;
+Cr = 0.5*R -0.4187*V -0.0813*B + 128;
+%% Commentaires
 % baby.png elimine la premiere image (C1)
 % difficile de voir a l'oeil nu une difference entre les 2 derniers types
 % d'image (moyenne arithmetique et rgb2gray)
+
 M = [0.2989 0.5870 0.1140; (-0.1687) (-0.3313) 0.5; 0.5 (-0.4187) (-0.0813)];
 M'*M % M n'est pas orthogonale 
+
+%% Affichage des composantes dans l'espace YCbCr
+figure(2);
+colormap gray;
+subplot(2,3,1);
+imagesc(Cb);
+axis off;
+axis equal;
+title('Cb','FontSize',20);
+
+subplot(2,3,2);
+imagesc(Cb);
+axis off;
+axis equal;
+title('Cr','FontSize',20);
