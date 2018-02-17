@@ -43,11 +43,11 @@ distances = sqrt(sum(distances.^2));
 [distance_min, indice_min] = min(distances);
 
 % Affichage du resultat :
-% if ...<s
-% 	individu_reconnu = ...
-% 	title({['Posture numero ' num2str(posture) ' de l''individu numero ' num2str(individu)];...
-% 		['Je reconnais l''individu numero ' num2str(individu_reconnu)]},'FontSize',20);
-% else
-% 	title({['Posture numero ' num2str(posture) ' de l''individu numero ' num2str(individu)];...
-% 		'Je ne reconnais pas cet individu !'},'FontSize',20);
-% end
+if distance_min<s
+	individu_reconnu = indice_min;
+	title({['Posture numero ' num2str(posture) ' de l''individu numero ' num2str(individu)];
+		['Je reconnais l''individu numero ' num2str(individu_reconnu)]},'FontSize',20);
+else
+	title({['Posture numero ' num2str(posture) ' de l''individu numero ' num2str(individu)];
+		'Je ne reconnais pas cet individu !'},'FontSize',20);
+end
