@@ -5,8 +5,8 @@ figure('Name','Image tiree aleatoirement','Position',[0.2*L,0.2*H,0.6*L,0.5*H]);
 s = 6.0e+03;			% Seuil de reconnaissance a regler convenablement
 
 % Tirage aleatoire d'une image de test :
-individu = randi(15);
-posture = randi(6);
+individu = 4;
+posture = 6;
 fichier = [chemin '/i' num2str(individu,'%02d') num2str(posture,'%1d') '.mat'];
 load(fichier);
 img = eval(['i' num2str(individu,'%02d') num2str(posture,'%1d')]);
