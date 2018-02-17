@@ -33,12 +33,12 @@ C = X_c * W;
 C_N = C(:,1:N);
 
 % N premieres composantes principales de l'image de test :
-img_v = double(img(:)) - individu_moyen;
+img_v = double(img(:)) - individu_moyen';
 composantes_img_v = img_v' * W;
 img_N = composantes_img_v(:,1:N);
 
 % Determination de l'image d'apprentissage la plus proche :
-distances = img - C_N;
+distances = img_N - C_N;
 distances = sqrt(sum(distances.^2));
 [distance_min, indice_min] = min(distances);
 
