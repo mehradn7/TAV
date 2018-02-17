@@ -29,11 +29,12 @@ for i=1:n-1
 end
 N = i;
 % N premieres composantes principales des images d'apprentissage :
+C = X_c * W;
 C_N = C(:,1:N);
 
 % N premieres composantes principales de l'image de test :
-img_v = img(:);
-composantes_img_v = img_v * W;
+img_v = double(img(:));
+composantes_img_v = img_v' * W;
 img_N = composantes_img_v(:,1:N);
 
 % Determination de l'image d'apprentissage la plus proche :
