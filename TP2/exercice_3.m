@@ -2,11 +2,11 @@ clear;
 close all;
 load exercice_1;
 figure('Name','Image tiree aleatoirement','Position',[0.2*L,0.2*H,0.6*L,0.5*H]);
-s = 6.0e+03;			% Seuil de reconnaissance a regler convenablement
+s = 4.0e+03;			% Seuil de reconnaissance a regler convenablement
 
 % Tirage aleatoire d'une image de test :
-individu = 4;
-posture = 6;
+individu =randi(15);
+posture = randi(6);
 fichier = [chemin '/i' num2str(individu,'%02d') num2str(posture,'%1d') '.mat'];
 load(fichier);
 img = eval(['i' num2str(individu,'%02d') num2str(posture,'%1d')]);
@@ -20,9 +20,9 @@ axis off;
 
 % Calcul du nombre N de composantes principales a prendre en compte :
 proportion_contraste = 0;
-somme_vp = sum(diag(Sigma_2(1:n-1,1:n-1)));
+somme_vp = sum(D(1:n-1));
 for i=1:n-1
-    proportion_contraste = proportion_contraste + Sigma_2(i,i)/somme_vp;
+    proportion_contraste = proportion_contraste + D(i)/somme_vp;
     if proportion_contraste > 0.95
         break
     end
@@ -39,12 +39,12 @@ img_N = composantes_img_v(:,1:N);
 
 % Determination de l'image d'apprentissage la plus proche :
 distances = img_N - C_N;
-distances = sqrt(sum(distances.^2));
+distances = sqrt(sum(distances.^2, 2));
 [distance_min, indice_min] = min(distances);
 
 % Affichage du resultat :
 if distance_min<s
-	individu_reconnu = indice_min;
+	individu_reconnu = numeros_individus(floor((indice_min+1)/nb_postures));
 	title({['Posture numero ' num2str(posture) ' de l''individu numero ' num2str(individu)];
 		['Je reconnais l''individu numero ' num2str(individu_reconnu)]},'FontSize',20);
 else
