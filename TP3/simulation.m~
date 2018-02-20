@@ -1,0 +1,7 @@
+function [x_gauche,x_droite] = simulation(y,beta_0,gamma_0,delta_moyen,sigma_delta,d);
+    x_gauche = bezier(y,gamma_0,delta_moyen + sigma_delta*randn(,));
+
+    x_dr = bezier(y,gamma_0,delta_moyen + sigma_delta*randn(,));
+
+end
+
