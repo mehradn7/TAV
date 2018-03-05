@@ -19,9 +19,16 @@ for k = 1:N
 	I = zeros(hauteur,largeur);
 	[x_gauche,x_droite] = simulation(y,beta_0,gamma_0,delta_moyen,sigma_delta,d);
 
-	...
+    
+    for i=1:size(x_droite,2)
+        texture_resize = imresize(texture,[h largeur]);
+        largeur_flamme = 1 + floor(abs(x_droite(i) - x_gauche(i))*echelle_en_largeur);
+        debut_flamme = floor((largeur/2 + echelle_en_largeur*(x_gauche(i) - x_centre)));
+        ligne_texture = imresize(texture_resize(i,:), [1, largeur_flamme]);
+        I(i, debut_flamme:debut_flamme + largeur_flamme -1 ) = ligne_texture;
+    end
 
-	imagesc(I);
+	imagesc(I / max(texture(:)));
 	axis xy;
 	axis off;
 	colormap(hot);		% Table de couleurs donnant des couleurs chaudes (doc colormap)
