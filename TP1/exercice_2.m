@@ -7,7 +7,7 @@ figure('Name','Separation des canaux RVB','Position',[0,0,0.67*L,0.67*H]);
 figure('Name','Nuage de pixels dans le repere RVB','Position',[0.67*L,0,0.33*L,0.45*H]);
 
 % Lecture et affichage d'une image RVB :
-I = imread('autumn.tif');
+I = imread('gantrycrane.png');
 figure(1);				% Premiere fenetre d'affichage
 subplot(2,2,1);				% La fenetre comporte 2 lignes et 2 colonnes
 imagesc(I);
