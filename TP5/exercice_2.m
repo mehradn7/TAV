@@ -7,7 +7,7 @@ H = taille_ecran(4);
 couleurs_classes = [0 0.1250 1.0 ; 0.1750 1.0 0.2250 ; 1.0 1.0 0 ; 1.0 0.3750 0 ; 0.85 0 0 ; 0.5 0 0.3 ; 0.5 0.5 0.1];
 
 % Parametres de la methode de segmentation :
-T_0 = 1.0;
+T_0 = 0;
 q_max = 100;
 alpha = 0.99;
 beta = 1;
