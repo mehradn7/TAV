@@ -1,7 +1,7 @@
 %--------------------------------------------------------------------------
 % ENSEEIHT - 2IMA - Traitement des donnees Audio-Visuelles
 % TP7 - Restauration d'images
-% exercice_1_bis.m : Debruitage avec modele de Tikhonov (couleurs)
+% exercice_2_bis.m : Inpainting par segmentation
 %--------------------------------------------------------------------------
 
 clear
@@ -15,9 +15,25 @@ H = taille_ecran(4);
 figure('Name','Debruitage avec le modele de Tikhonov','Position',[0.06*L,0.1*H,0.9*L,0.7*H])
 
 % Lecture de l'image :
-u0 = double(imread('lena.bmp'));
+u0 = double(imread('grenouille.png'));
 [nb_lignes,nb_colonnes,nb_canaux] = size(u0);
 u_max = max(u0(:));
+
+nb_pixels = nb_lignes*nb_colonnes;
+
+
+%% Construction du masque
+u_mask = double(zeros(size(u0)));
+for i=1:nb_lignes
+    for j=1:nb_colonnes
+        if (u0(i,j,1) > 200 && u0(i,j,2) > 200 && u0(i,j,3) < 20)
+            u_mask(i,j) = 255;
+        end
+    end
+end
+W_moins_D = ones(size(u_mask)) - u_mask./255;
+W_moins_D = spdiags(W_moins_D(:), 0, nb_pixels, nb_pixels);
+%%
 
 % Ajout d'un bruit gaussien :
 sigma_bruit = 0.05;
@@ -31,7 +47,6 @@ subplot(1,2,1)
 	title('Image bruitee','FontSize',20)
 
 % Operateur gradient :
-nb_pixels = nb_lignes*nb_colonnes;
 e = ones(nb_pixels,1);
 Dx = spdiags([-e e],[0 nb_lignes],nb_pixels,nb_pixels);
 Dx(nb_pixels-nb_lignes+1:nb_pixels,:) = 0;
@@ -40,11 +55,11 @@ Dy(nb_lignes:nb_lignes:nb_pixels,:) = 0;
 
 % Second membre b du systeme :
 b_R = u0(:,:,1);
-b_R = b_R(:);
+b_R = W_moins_D*b_R(:);
 b_V = u0(:,:,2);
-b_V = b_V(:);
+b_V = W_moins_D*b_V(:);
 b_B = u0(:,:,3);
-b_B = b_B(:);
+b_B = W_moins_D*b_B(:);
 
 lambda = 15; % Poids de la regularisation
 eps = 0.01;
@@ -73,7 +88,7 @@ while diff_norme > norme_x/1000
     % Canal rouge
     W_R = 1./sqrt(gradients_x_R.^2 + gradients_y_R.^2 + eps);
     W_R = spdiags(W_R, 0, nb_pixels, nb_pixels);
-    A_R = speye(nb_pixels) - lambda * ( (-Dx'*W_R*Dx - Dy'*W_R*Dy) );
+    A_R = W_moins_D - lambda * ( (-Dx'*W_R*Dx - Dy'*W_R*Dy) );
     u_prec_R = u_R;
     [x_R,flag] = pcg(A_R,b_R,1e-5,50,R',R,u_R(:));
     u_R = reshape(x_R,nb_lignes,nb_colonnes);
@@ -83,7 +98,7 @@ while diff_norme > norme_x/1000
     % Canal vert
     W_V = 1./sqrt(gradients_x_V.^2 + gradients_y_V.^2 + eps);
     W_V = spdiags(W_V, 0, nb_pixels, nb_pixels);
-    A_V = speye(nb_pixels) - lambda * ( (-Dx'*W_V*Dx - Dy'*W_V*Dy) );
+    A_V = W_moins_D - lambda * ( (-Dx'*W_V*Dx - Dy'*W_V*Dy) );
     u_prec_V = u_V;
     [x_V,flag] = pcg(A_V,b_V,1e-5,50,R',R,u_V(:));
     u_V = reshape(x_V,nb_lignes,nb_colonnes);
@@ -91,16 +106,18 @@ while diff_norme > norme_x/1000
     % Canal bleu
     W_B = 1./sqrt(gradients_x_B.^2 + gradients_y_B.^2 + eps);
     W_B = spdiags(W_B, 0, nb_pixels, nb_pixels);
-    A_B = speye(nb_pixels) - lambda * ( (-Dx'*W_B*Dx - Dy'*W_B*Dy) );
+    A_B = W_moins_D - lambda * ( (-Dx'*W_B*Dx - Dy'*W_B*Dy) );
     u_prec_B = u_B;
     [x_B,flag] = pcg(A_B,b_B,1e-5,50,R',R,u_B(:));
     u_B = reshape(x_B,nb_lignes,nb_colonnes);
     
     k = k+1;
-    u
+    u(:,:,1) = u_R;
+    u(:,:,2) = u_V;
+    u(:,:,3) = u_B;
     drawnow nocallbacks
     subplot(1,2,2)
-	imagesc(max(0,min(1,u_R/u_max)),[0 1])
+	imagesc(max(0,min(1,u/u_max)),[0 1])
 	colormap gray
 	axis image off
 	title('Image restauree','FontSize',20)
