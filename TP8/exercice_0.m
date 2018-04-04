@@ -15,7 +15,7 @@ H = taille_ecran(4);
 figure('Name','Debruitage avec le modele de Tikhonov','Position',[0.06*L,0.1*H,0.9*L,0.7*H])
 
 % Lecture de l'image :
-u0 = double(imread('fleur.png'));
+u0 = double(imread('randonneur.jpg'));
 [nb_lignes,nb_colonnes,nb_canaux] = size(u0);
 u_max = max(u0(:));
 
@@ -23,14 +23,13 @@ nb_pixels = nb_lignes*nb_colonnes;
 
 
 %% Lecture du masque
-u_mask = double(imread('fleur_masque.png')) ./255;
-% u_mask = u_mask(:);
-W_moins_D = ones(size(u_mask));
+u_mask = double(imread('randonneur_masque.jpg')) ./255;
+W_moins_D = ones(size(u_mask)) - u_mask;
 W_moins_D = spdiags(W_moins_D(:), 0, nb_pixels, nb_pixels);
 %%
 
 % Ajout d'un bruit gaussien :
-sigma_bruit = 0.05;
+sigma_bruit = 0;
 u0 = u0 + sigma_bruit*u_max*randn(nb_lignes,nb_colonnes);
 
 % Affichage de l'image bruitee :
@@ -55,7 +54,7 @@ b_V = W_moins_D*b_V(:);
 b_B = u0(:,:,3);
 b_B = W_moins_D*b_B(:);
 
-lambda = 15; % Poids de la regularisation
+lambda = 1; % Poids de la regularisation
 eps = 0.01;
 
 Lap = -Dx'*Dx - Dy'*Dy;
@@ -92,7 +91,7 @@ while diff_norme > norme_x/1000
     % Canal vert
     W_V = 1./sqrt(gradients_x_V.^2 + gradients_y_V.^2 + eps);
     W_V = spdiags(W_V, 0, nb_pixels, nb_pixels);
-    A_V = speye(nb_pixels) - lambda * ( (-Dx'*W_V*Dx - Dy'*W_V*Dy) );
+    A_V = W_moins_D - lambda * ( (-Dx'*W_V*Dx - Dy'*W_V*Dy) );
     u_prec_V = u_V;
     [x_V,flag] = pcg(A_V,b_V,1e-5,50,R',R,u_V(:));
     u_V = reshape(x_V,nb_lignes,nb_colonnes);
@@ -100,7 +99,7 @@ while diff_norme > norme_x/1000
     % Canal bleu
     W_B = 1./sqrt(gradients_x_B.^2 + gradients_y_B.^2 + eps);
     W_B = spdiags(W_B, 0, nb_pixels, nb_pixels);
-    A_B = speye(nb_pixels) - lambda * ( (-Dx'*W_B*Dx - Dy'*W_B*Dy) );
+    A_B = W_moins_D - lambda * ( (-Dx'*W_B*Dx - Dy'*W_B*Dy) );
     u_prec_B = u_B;
     [x_B,flag] = pcg(A_B,b_B,1e-5,50,R',R,u_B(:));
     u_B = reshape(x_B,nb_lignes,nb_colonnes);
