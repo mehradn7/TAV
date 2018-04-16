@@ -5,7 +5,7 @@ L = taille_ecran(3);
 H = taille_ecran(4);
 
 % Lecture et affichage de l'image source s :
-s = imread('rose.jpg');
+s = imread('monkey.jpg');
 [nb_lignes_s,nb_colonnes_s,nb_canaux] = size(s);
 figure('Name','Image source','Position',[0.06*L,0.1*H,0.9*L,0.75*H]);
 imagesc(s);
@@ -32,26 +32,11 @@ s = rgb2lab(s);
 
 
 % Lecture et affichage de l'image cible c :
-c = imread('rose.jpg');
+c = imread('monkey.jpg');
 [nb_lignes_c,nb_colonnes_c,nb_canaux] = size(c);
 figure('Name','Image cible','Position',[0.06*L,0.1*H,0.9*L,0.75*H]);
 imagesc(c);
 axis image off;
-
-
-% Selection et affichage d'un rectangle r dans c :
-% disp('Cliquez les deux extremites de la zone cible');
-% [x_r,y_r] = ginput(2);
-% i_r = min(max(round(y_r),1),nb_lignes_c);
-% j_r = min(max(round(x_r),1),nb_colonnes_c);
-% j_r_min = min(j_r(:));
-% j_r_max = max(j_r(:));
-% i_r_min = min(i_r(:));
-% i_r_max = max(i_r(:));
-% line([j_r_min j_r_max],[i_r_min,i_r_min],'Color','r','LineWidth',2);
-% line([j_r_min j_r_max],[i_r_max,i_r_max],'Color','r','LineWidth',2);
-% line([j_r_min j_r_min],[i_r_min,i_r_max],'Color','r','LineWidth',2);
-% line([j_r_max j_r_max],[i_r_min,i_r_max],'Color','r','LineWidth',2);
 
 c = rgb2lab(c);
 c(:,:,2) = 0;

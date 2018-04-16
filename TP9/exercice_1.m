@@ -5,7 +5,7 @@ L = taille_ecran(3);
 H = taille_ecran(4);
 
 % Lecture et affichage de l'image source s :
-s = imread('source.jpg');
+s = imread('monkey.jpg');
 [nb_lignes_s,nb_colonnes_s,nb_canaux] = size(s);
 figure('Name','Image source','Position',[0.06*L,0.1*H,0.9*L,0.75*H]);
 imagesc(s);

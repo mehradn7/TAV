@@ -69,17 +69,20 @@ T = 50;				% Fenetre de recherche de taille (2T+1) x (2T+1)
 while nb_points_delta_D > 0
 
 	% Pixel p de la frontiere de D tire aleatoirement :
-	[x_p, y_p] = ind2sub(size(delta_D), indices_delta_D(randi(nb_points_delta_D)));
+    indp = indices_delta_D(randi([1 nb_points_delta_D],1,1));
+	p = delta_D(indp);
 
 	% Recherche du pixel q_chapeau :
-	[existe_q,bornes_V_p,bornes_V_q_chapeau] = d_min(x_p,y_p,u,D,t,T);
-
+	[i_p,j_p] = ind2sub(size(D),indp);
+    
+    
+    [existe_q,bornes_V_p,bornes_V_q_chapeau] = d_min(i_p,j_p,u,D,t,T);
 	% S'il existe au moins un pixel q eligible :
 	if existe_q
 
 		% Rapiecage et mise a jour de D :
 		[u,D] = rapiecage_1(bornes_V_p,bornes_V_q_chapeau,u,D);
-        
+
 		% Mise a jour de la frontiere de D :
 		delta_D = edge(D);
         indices_delta_D = find(delta_D > 0);
