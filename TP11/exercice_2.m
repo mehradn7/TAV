@@ -14,7 +14,7 @@ nb_mesures = floor(duree/duree_mesure);
 nb_echantillons_par_mesure = floor(nb_echantillons/nb_mesures);
 
 % Calcul du sonagramme :
-proportion = 0.5;				% A faire varier entre 0 et 1 
+proportion = 0.9;				% A faire varier entre 0 et 1 
 [S,taux_compression] = calcul_S(signal,nb_echantillons_par_mesure,proportion);
 fprintf('Taux de compression : %.0f\n',taux_compression);
 

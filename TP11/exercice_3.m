@@ -17,9 +17,9 @@ nb_echantillons_par_mesure = floor(nb_echantillons/nb_mesures);
 [S,taux_compression] = calcul_S(signal,nb_echantillons_par_mesure,1);
 
 % Selection des elements du sonagramme de plus forte intensite :
-n = 100;
+n = 200;
 [indices_S_max,S_max,taux_compression] = calcul_S_max(signal,nb_echantillons_par_mesure,n);
-fprintf('Coefficient de compression : %.0f\n',taux_compression);
+fprintf('Taux de compression : %.0f\n',taux_compression);
 
 % Affichage du sonagramme original, en guise de comparaison :
 figure('Name','Compression audio','Position',[0,0,L,0.6*H]);
@@ -53,7 +53,7 @@ drawnow;
 
 % Restitution du signal a partir du sonagramme reconstitue :
 TG_reconstituee = zeros(nb_echantillons_par_mesure,nb_mesures);
-TG_reconstituee(end:-1:end-size(S_reconstitue,1)+1,:) = S_reconstitue;
+TG_reconstituee(1:size(S_reconstitue,1),:) = S_reconstitue;
 signal_restitue = real(ifft(TG_reconstituee));		% signal_restitue doit etre reel
 signal_restitue = signal_restitue(:);			% signal_restitue doit etre un vecteur
 sound(signal_restitue,f_echantillonnage);
